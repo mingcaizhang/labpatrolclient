@@ -23,19 +23,31 @@
         ><label name='pageinfo'>{{ currentPage }}/{{ totalPageCount }} </label></el-col
       >
 
+      <el-col :span="2" class="demo-input-suffix">
+        <el-input
+          v-model="filterResult">
+        </el-input>
+      </el-col>
+        <el-col :span="2"
+          ><el-button @click="fetchData(1)">search</el-button>
+      </el-col>
     </el-row>
+
     <el-dialog
       title="progress"
       :visible.sync="dialogVisible"
       width="20%">
       <el-progress type="circle" :percentage="exportPerc"></el-progress>
     </el-dialog>
-    <el-table ref="multipleTable" :data="list" :border="true" stripe>
+    <el-table ref="multipleTable" :data="list" :border="true" style="width:100%">
       <el-table-column
         v-for="item of headers"
         :key="item"
         :prop="item"
         :label="item"
+        fontSize="20"
+        :fontRate="fontRate"
+        align = "center"
       >
       </el-table-column>
     </el-table>
@@ -74,6 +86,12 @@ export default class TableShow extends Vue {
     ont: []
   };
 
+  fontRate = {
+    CHAR_RATE: 1.1, // 汉字比率
+    NUM_RATE: 0.65, // 数字
+    OTHER_RATE: 0.8 // 除汉字和数字以外的字符的比率
+  }
+
   private list: oneCardInfo[] = [];
   private cardFilter: string[] = [
     'cardPosition',
@@ -88,29 +106,33 @@ export default class TableShow extends Vue {
   private oneShowCount = 50;
   private dialogVisible = false
   private exportPerc = 0
+  private filterResult = ''
   created(): void {
     this.fetchData(1)
   }
 
-  private async getDataResult(pageNum: number): Promise<oneCardInfo[]> {
+  private async getDataResult(pageNum: number, filter = ''):Promise<oneCardInfo[]> {
     let data
+
     if (this.showType === 'axoscard') {
       data = (
-        await getAxosCard({ pageNum: pageNum, eachFetch: this.oneShowCount })
+        await getAxosCard({ pageNum: pageNum, eachFetch: this.oneShowCount, filter: filter })
       ).data
     } else if (this.showType === 'exacard') {
       data = (
-        await getExaCard({ pageNum: pageNum, eachFetch: this.oneShowCount })
+        await getExaCard({ pageNum: pageNum, eachFetch: this.oneShowCount, filter: filter })
       ).data
     } else if (this.showType === 'axosont') {
       data = (await getAxosOnt({
         pageNum: pageNum,
-        eachFetch: this.oneShowCount
+        eachFetch: this.oneShowCount,
+        filter: filter
       })).data
     } else if (this.showType === 'exaont') {
       data = (await getExaOnt({
         pageNum: pageNum,
-        eachFetch: this.oneShowCount
+        eachFetch: this.oneShowCount,
+        filter: filter
       })).data
     }
 
@@ -130,14 +152,15 @@ export default class TableShow extends Vue {
   }
 
   private async fetchData(pageNum: number) {
-    const dataList = await this.getDataResult(pageNum)
+    const dataList = await this.getDataResult(pageNum, this.filterResult)
     if (!dataList || dataList.length === 0) {
+      this.list = []
       return
     }
     for (let ii = 0; ii < dataList.length; ii++) {
       for (const key in dataList[ii]) {
         if (key.indexOf('.') !== -1) {
-          dataList[ii][key.replaceAll('.', '')] = dataList[ii][key]
+          dataList[ii][key.replaceAll('.', '')] = dataList[ii][key].trim()
           delete dataList[ii][key]
         }
       }
@@ -145,7 +168,7 @@ export default class TableShow extends Vue {
     this.list = dataList
     this.headers = []
     for (const item in this.list[0]) {
-      this.headers.push(item.replaceAll('.', ''))
+      this.headers.push(item.replaceAll('.', '').trim())
     }
   }
 
@@ -318,7 +341,7 @@ export default class TableShow extends Vue {
       maxLen.push(header[ii].length)
     }
 
-    for (let ii = 0; ii < txtData.length && ii < 5; ii++) {
+    for (let ii = 0; ii < txtData.length; ii++) {
       for (let jj = 0; jj < txtData[ii].length; jj++) {
         if (maxLen[jj] < txtData[ii][jj].length) {
           maxLen[jj] = txtData[ii][jj].length
@@ -338,7 +361,7 @@ export default class TableShow extends Vue {
     for (let ii = 0; ii < txtData.length; ii++) {
       let contentLine = ''
       for (let jj = 0; jj < txtData[ii].length && jj < maxLen.length; jj++) {
-        contentLine += printf(`%-${maxLen[jj]}s `, txtData[ii][jj])
+        contentLine += printf(`%-${maxLen[jj]}s `, (txtData[ii][jj] === '') ? '-' : txtData[ii][jj])
       }
       strOut += contentLine + '\r\n'
     }
