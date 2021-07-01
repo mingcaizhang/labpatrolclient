@@ -39,20 +39,27 @@
       width="20%">
       <el-progress type="circle" :percentage="exportPerc"></el-progress>
     </el-dialog>
-    <el-table ref="multipleTable" :data="list" :border="true" style="width:100%">
+    <el-table ref="multipleTable" :data="list" :border="true" style="width:150%" :fit="true">
       <el-table-column
         v-for="item of headers"
         :key="item"
         :prop="item"
         :label="item"
-        fontSize="20"
-        :fontRate="fontRate"
-        align = "center"
+	:autoFit='true'
+	:fitHeader='true'		
       >
       </el-table-column>
     </el-table>
   </div>
 </template>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped lang="scss">
+.el-table .cell {
+  white-space: nowrap;
+  width: fit-content;
+}
+</style>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator'

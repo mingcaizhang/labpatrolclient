@@ -20,6 +20,7 @@
     "driver.js": "^0.9.8",
     "echarts": "^5.0.2",
     "element-ui": "^2.15.1",
+    "ex-table-column": "^1.1.2",
     "faker": "^5.5.2",
     "file-saver": "^2.0.5",
     "fuse.js": "^6.4.6",
