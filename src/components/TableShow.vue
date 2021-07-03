@@ -263,7 +263,11 @@ export default class TableShow extends Vue {
                 header.push(key)
               }
             }
-            this.exportPerc = Math.floor(pageNum * 100 / needPage)
+            let percent = Math.floor(pageNum * 100 / needPage)
+            if (percent > 100) {
+              percent = 100
+            }
+            this.exportPerc = percent
             if (pageNum > needPage) {
               break
             }
@@ -302,7 +306,9 @@ export default class TableShow extends Vue {
     let needPage = 0
     const csvData = []
     const header: string[] = []
-    while (true && pageNum < 20) {
+    this.exportPerc = 0
+    this.dialogVisible = true
+    while (true) {
       if (this.showType === 'axoscard') {
         data = (
           await getAxosCard({ pageNum: pageNum, eachFetch: this.oneShowCount })
@@ -360,6 +366,11 @@ export default class TableShow extends Vue {
               header.push(key)
             }
           }
+          let percent = Math.floor(pageNum * 100 / needPage)
+          if (percent > 100) {
+            percent = 100
+          }
+          this.exportPerc = percent
           if (pageNum > needPage) {
             break
           }
@@ -373,6 +384,7 @@ export default class TableShow extends Vue {
     if (csvData.length > 0) {
       this.downloadText(csvData, header, this.showType + '.txt')
     }
+    this.dialogVisible = false
   }
 
   private async downloadText(txtData:string[][], header:string[], fileName:string) {
