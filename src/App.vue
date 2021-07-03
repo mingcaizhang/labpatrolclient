@@ -11,6 +11,8 @@
       <el-menu-item index="2" @click="loadExa">ExaCard</el-menu-item>
       <el-menu-item index="3" @click="loadAxosOnt">AxosOnt</el-menu-item>
       <el-menu-item index="4" @click="loadExaOnt">ExaOnt</el-menu-item>
+      <el-menu-item index="5" @click="loadAxosModule">AxosModule</el-menu-item>
+      <el-menu-item index="6" @click="loadExaModule">ExaModule</el-menu-item>
     </el-menu>
   </el-aside>
 
@@ -64,6 +66,18 @@ export default class extends Vue {
 
   private loadExaOnt() {
     this.$router.push({ path: '/exaont' }).catch(err => {
+      console.warn(err)
+    })
+  }
+
+  private loadExaModule() {
+    this.$router.push({ path: '/examodule' }).catch(err => {
+      console.warn(err)
+    })
+  }
+
+  private loadAxosModule() {
+    this.$router.push({ path: '/axosmodule' }).catch(err => {
       console.warn(err)
     })
   }

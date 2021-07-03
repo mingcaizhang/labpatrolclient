@@ -26,3 +26,17 @@ export const getExaOnt = (params: any) =>
     method: 'get',
     params
   })
+
+export const getExaModule = (params: any) =>
+  request({
+    url: '/examodule',
+    method: 'get',
+    params
+  })
+
+export const getAxosModule = (params: any) =>
+  request({
+    url: '/axosmodule',
+    method: 'get',
+    params
+  })

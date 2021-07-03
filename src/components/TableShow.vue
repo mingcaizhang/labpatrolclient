@@ -45,8 +45,6 @@
         :key="item"
         :prop="item"
         :label="item"
-	:autoFit='true'
-	:fitHeader='true'		
       >
       </el-table-column>
     </el-table>
@@ -67,7 +65,9 @@ import {
   getExaCard,
   getAxosCard,
   getAxosOnt,
-  getExaOnt
+  getExaOnt,
+  getAxosModule,
+  getExaModule
 } from '@/api/DataFetch'
 import CsvExportor from 'csv-exportor'
 import printf from 'printf'
@@ -141,6 +141,18 @@ export default class TableShow extends Vue {
         eachFetch: this.oneShowCount,
         filter: filter
       })).data
+    } else if (this.showType === 'axosmodule') {
+      data = (await getAxosModule({
+        pageNum: pageNum,
+        eachFetch: this.oneShowCount,
+        filter: filter
+      })).data
+    } else if (this.showType === 'examodule') {
+      data = (await getExaModule({
+        pageNum: pageNum,
+        eachFetch: this.oneShowCount,
+        filter: filter
+      })).data
     }
 
     if (data && data.code === 200) {
@@ -207,6 +219,16 @@ export default class TableShow extends Vue {
           })).data
         } else if (this.showType === 'exaont') {
           data = (await getExaOnt({
+            pageNum: pageNum,
+            eachFetch: this.oneShowCount
+          })).data
+        } else if (this.showType === 'axosmodule') {
+          data = (await getAxosModule({
+            pageNum: pageNum,
+            eachFetch: this.oneShowCount
+          })).data
+        } else if (this.showType === 'examodule') {
+          data = (await getExaModule({
             pageNum: pageNum,
             eachFetch: this.oneShowCount
           })).data
@@ -294,6 +316,16 @@ export default class TableShow extends Vue {
         })).data
       } else if (this.showType === 'exaont') {
         data = (await getExaOnt({
+          pageNum: pageNum,
+          eachFetch: this.oneShowCount
+        })).data
+      } else if (this.showType === 'axosmodule') {
+        data = (await getAxosModule({
+          pageNum: pageNum,
+          eachFetch: this.oneShowCount
+        })).data
+      } else if (this.showType === 'examodule') {
+        data = (await getExaModule({
           pageNum: pageNum,
           eachFetch: this.oneShowCount
         })).data
