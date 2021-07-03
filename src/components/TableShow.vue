@@ -45,6 +45,8 @@
         :key="item"
         :prop="item"
         :label="item"
+        :autoFit='true'
+        :fitHeader='true'
       >
       </el-table-column>
     </el-table>
