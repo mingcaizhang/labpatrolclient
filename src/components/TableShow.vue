@@ -31,6 +31,9 @@
         <el-col :span="2"
           ><el-button @click="fetchData(1)">search</el-button>
       </el-col>
+      <el-col :span="2"
+          ><el-button @click="batchCmd()">XCommand</el-button>
+      </el-col>    
     </el-row>
 
     <el-dialog
@@ -69,10 +72,17 @@ import {
   getAxosOnt,
   getExaOnt,
   getAxosModule,
-  getExaModule
+  getExaModule,
+  getExaCardIp,
+  getAxosCardIp,
+  getAxosOntIp,
+  getExaOntIp,
+  getAxosModuleIp,
+  getExaModuleIp,  
 } from '@/api/DataFetch'
 import CsvExportor from 'csv-exportor'
 import printf from 'printf'
+import store from '@/store'
 // import axios from 'axios'
 
 type oneCardInfo = {
@@ -119,6 +129,48 @@ export default class TableShow extends Vue {
   created(): void {
     this.fetchData(1)
   }
+
+  private async getDataIps(filter = ''):Promise<oneCardInfo[]> {
+    let data
+
+    if (this.showType === 'axoscard') {
+      data = (
+        await getAxosCardIp({ filter: filter})
+      ).data
+    } else if (this.showType === 'exacard') {
+      data = (
+        await getExaCardIp({ filter: filter})
+      ).data
+    } else if (this.showType === 'axosont') {
+      data = (await getAxosOntIp({
+        filter: filter,
+      })).data
+    } else if (this.showType === 'exaont') {
+      data = (await getExaOntIp({
+        filter: filter,
+      })).data
+    } else if (this.showType === 'axosmodule') {
+      data = (await getAxosModuleIp({
+        filter: filter,
+      })).data
+    } else if (this.showType === 'examodule') {
+      data = (await getExaModuleIp({
+        filter: filter,
+      })).data
+    }
+
+    if (data && data.code === 200) {
+      if (data.message) {
+        const res = data.message.res as oneCardInfo[]
+        console.log(res)
+        return res
+      }
+    } else {
+      return [] as oneCardInfo[]
+    }
+    return []
+  }
+
 
   private async getDataResult(pageNum: number, filter = ''):Promise<oneCardInfo[]> {
     let data
@@ -171,6 +223,7 @@ export default class TableShow extends Vue {
     }
     return []
   }
+
 
   private async fetchData(pageNum: number) {
     const dataList = await this.getDataResult(pageNum, this.filterResult)
@@ -442,6 +495,21 @@ export default class TableShow extends Vue {
       null
     )
     saveLink.dispatchEvent(ev)
+  }
+
+  private async batchCmd() {
+    let data = await this.getDataIps(this.filterResult)
+    // console.log(data)
+    if (data.length > 0) {
+      let ipList = data.filter((value)=>value['address']).map((value)=>{
+        return value['address']
+      })
+      this.$store.commit('setXCmdIpList', ipList)
+    }
+    this.$emit('CmdIpListChg')
+    this.$router.push({ path: '/xcommand' }).catch(err => {
+      console.warn(err)
+    })    
   }
 }
 </script>

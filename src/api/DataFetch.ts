@@ -40,3 +40,45 @@ export const getAxosModule = (params: any) =>
     method: 'get',
     params
   })
+
+  export const getAxosCardIp = (params: any) =>
+  request({
+    url: '/axoscardip',
+    method: 'get',
+    params
+  })
+
+export const getExaCardIp = (params: any) =>
+  request({
+    url: '/exacardip',
+    method: 'get',
+    params
+  })
+
+export const getAxosOntIp = (params: any) =>
+  request({
+    url: '/axosontip',
+    method: 'get',
+    params
+  })
+
+export const getExaOntIp = (params: any) =>
+  request({
+    url: '/exaontip',
+    method: 'get',
+    params
+  })
+
+export const getExaModuleIp = (params: any) =>
+  request({
+    url: '/examoduleip',
+    method: 'get',
+    params
+  })
+
+export const getAxosModuleIp = (params: any) =>
+  request({
+    url: '/axosmoduleip',
+    method: 'get',
+    params
+  })  
