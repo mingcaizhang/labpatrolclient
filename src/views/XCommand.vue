@@ -104,6 +104,7 @@ export default class XCommand extends Vue {
   private wsTimerHandle:NodeJS.Timeout | undefined = undefined
   private shellChk = false
   private exaCardChk = false
+  private webSocketIp = '10.245.251.172'  // 127.0.0.1
 
   created(): void {
     console.log('XCommand created ')
@@ -162,7 +163,7 @@ export default class XCommand extends Vue {
       // console.log(this.$store.state.xCommandIpList)
       // this.ipList = this.$store.state.xCommandIpList
       this.execDisableSet(true)
-      this.wsSocket = new WebSocket("ws://localhost:8081");
+      this.wsSocket = new WebSocket(`ws://${this.webSocketIp}:8081`);
       this.wsSocket.onopen = this.webSocketOnOpen;
       this.wsSocket.onmessage = this.webSocketOnMsg;
       this.wsSocket.onclose = this.webSocketOnClose;
