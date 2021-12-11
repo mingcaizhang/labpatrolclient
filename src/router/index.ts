@@ -6,6 +6,7 @@ import AxosOnt from '../views/AxosOnt.vue'
 import E7Ont from '../views/E7Ont.vue'
 import AxosModule from '../views/AxosModule.vue'
 import ExaModule from '../views/ExaModule.vue'
+import XCommand from '../views/XCommand.vue'
 
 Vue.use(VueRouter)
 
@@ -48,6 +49,12 @@ const routes: Array<RouteConfig> = [
     path: '/examodule',
     name: 'ExaModule',
     component: ExaModule
+  },
+
+  {
+    path: '/xcommand',
+    name: 'Xcommand',
+    component: XCommand
   },
 
   {

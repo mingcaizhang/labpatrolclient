@@ -13,6 +13,7 @@
       <el-menu-item index="4" @click="loadExaOnt">ExaOnt</el-menu-item>
       <el-menu-item index="5" @click="loadAxosModule">AxosModule</el-menu-item>
       <el-menu-item index="6" @click="loadExaModule">ExaModule</el-menu-item>
+       <el-menu-item index="7" @click="loadXCommand">XCommand</el-menu-item>
     </el-menu>
   </el-aside>
 
@@ -78,6 +79,12 @@ export default class extends Vue {
 
   private loadAxosModule() {
     this.$router.push({ path: '/axosmodule' }).catch(err => {
+      console.warn(err)
+    })
+  }
+ 
+  private loadXCommand() {
+    this.$router.push({ path: '/xcommand' }).catch(err => {
       console.warn(err)
     })
   }
