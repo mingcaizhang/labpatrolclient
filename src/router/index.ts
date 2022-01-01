@@ -7,6 +7,8 @@ import E7Ont from '../views/E7Ont.vue'
 import AxosModule from '../views/AxosModule.vue'
 import ExaModule from '../views/ExaModule.vue'
 import XCommand from '../views/XCommand.vue'
+import OntDiag from "../views/OntDiag.vue"
+import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
 
@@ -57,6 +59,11 @@ const routes: Array<RouteConfig> = [
     component: XCommand
   },
 
+  {
+    path:'/ontdiag',
+    name:'OntDiag',
+    component: OntDiag
+  },
   {
     path: '/about',
     name: 'About',

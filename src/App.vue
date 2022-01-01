@@ -14,6 +14,8 @@
       <el-menu-item index="5" @click="loadAxosModule">AxosModule</el-menu-item>
       <el-menu-item index="6" @click="loadExaModule">ExaModule</el-menu-item>
        <el-menu-item index="7" @click="loadXCommand">XCommand</el-menu-item>
+       <el-menu-item index="8" @click="loadOntDiag">OntDiag</el-menu-item>
+
     </el-menu>
   </el-aside>
 
@@ -87,6 +89,12 @@ export default class extends Vue {
     this.$router.push({ path: '/xcommand' }).catch(err => {
       console.warn(err)
     })
+  }
+
+  private loadOntDiag() {
+    this.$router.push({ path: '/ontdiag' }).catch(err => {
+      console.warn(err)
+    })    
   }
 }
 </script>

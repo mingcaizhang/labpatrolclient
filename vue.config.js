@@ -12,6 +12,9 @@ module.exports = {
   publicPath: process.env.NODE_ENV === 'production' ? '/vue-typescript-admin-template/' : '/',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
+  configureWebpack: {
+    devtool: 'source-map'
+  },
   devServer: {
     port: devServerPort,
     open: true,
