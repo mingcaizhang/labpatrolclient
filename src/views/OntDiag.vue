@@ -159,7 +159,7 @@ export default class OntDiag extends Vue {
   private ontlist: string[] = [];
   private checkOnt: string = "";
   private wsSocket: WebSocket | undefined = undefined;
-  private webSocketIp = /*'10.245.251.172'*/ "127.0.0.1";
+  private webSocketIp = '10.245.251.172' //"127.0.0.1";
   private resultInfo: string = "";
   private execType: "Onts" | "OntPortrait" | "none" = "none";
 
