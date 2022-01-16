@@ -7,6 +7,7 @@ import 'normalize.css'
 import '@/styles/element-variables.scss'
 import '@/styles/index.scss'
 import ElementUI from 'element-ui'
+// @ts-ignore
 import ExTableColumn from 'ex-table-column'
 
 Vue.config.productionTip = false

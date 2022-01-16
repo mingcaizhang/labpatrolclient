@@ -80,6 +80,7 @@ import {
   getAxosModuleIp,
   getExaModuleIp,  
 } from '@/api/DataFetch'
+// @ts-ignore
 import CsvExportor from 'csv-exportor'
 import printf from 'printf'
 import store from '@/store'

@@ -102,3 +102,24 @@ export interface DiagWSMsgOntDiagRes {
     ontId:string,
     OntCompose?: DiagCompose|null
 }
+
+export interface DiagLldpConn {
+    selfIp?:string,
+    portSelf:string,
+    peerIp:string, 
+    peerPort:string,
+}
+export interface DiagLldpNode {
+    selfIp:string, 
+    nodeName:string, 
+    conns:DiagLldpConn[]
+}
+
+export type FetchTopoResponse = {
+    code: number,
+    message: {
+        totalCount: number,
+        resCount:number,
+        res:DiagLldpNode[]
+    }
+}

@@ -1310,7 +1310,7 @@ export default class OntDiag extends Vue {
         .attr("stroke", "steelblue")
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
-        .attr("stroke-width", 1.5)
+        .attr("stroke-width", 1.5)    // @ts-ignore
         .attr("d", d3path);
     } 
 

@@ -8,6 +8,8 @@ import AxosModule from '../views/AxosModule.vue'
 import ExaModule from '../views/ExaModule.vue'
 import XCommand from '../views/XCommand.vue'
 import OntDiag from "../views/OntDiag.vue"
+import Topo from "../views/Topo.vue"
+
 import { component } from 'vue/types/umd'
 
 Vue.use(VueRouter)
@@ -64,6 +66,13 @@ const routes: Array<RouteConfig> = [
     name:'OntDiag',
     component: OntDiag
   },
+
+
+  {
+    path:'/topo',
+    name:'topo',
+    component: Topo
+  },  
   {
     path: '/about',
     name: 'About',

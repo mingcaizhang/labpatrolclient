@@ -82,3 +82,10 @@ export const getAxosModuleIp = (params: any) =>
     method: 'get',
     params
   })  
+
+  export const getAxosTopo = (params: any) =>
+  request({
+    url: '/axostopo',
+    method: 'get',
+    params
+  })    
