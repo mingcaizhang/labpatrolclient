@@ -67,7 +67,6 @@ const routes: Array<RouteConfig> = [
     component: OntDiag
   },
 
-
   {
     path:'/topo',
     name:'topo',

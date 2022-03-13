@@ -51,38 +51,38 @@ import {
   DiagWSMsgAllOntRes,
   DiagWSMsgOntDiagReq,
   DiagWSMsgOntDiagRes,
-} from "@/utils/DiagPub";
+} from "@/utils/DiagPub"
 
-import * as d3 from "d3";
+import * as d3 from "d3"
 
 
 interface DiagRectRec {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  name: string;
-  color?: string;
-  rectType?: DiagRectType;
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  name: string,
+  color?: string,
+  rectType?: DiagRectType
 }
 
 interface DiagOltCardRectRec extends DiagRectRec {
-  cardPos: DiagCardPos;
+  cardPos: DiagCardPos
 }
 
 interface DiagBpVlanRectRec extends DiagRectRec {
-  cardPos: DiagCardPos;
-  vlan: number;
+  cardPos: DiagCardPos,
+  vlan: number
 }
 
 interface DiagOltPortRectRec extends DiagRectRec {
-  cardPos: DiagCardPos;
+  cardPos: DiagCardPos
 }
 
 interface DiagPoint {
-  x: number;
-  y: number;
-  pointType?: FlowPointType;
+  x: number,
+  y: number,
+  pointType?: FlowPointType
 }
 
 enum DiagRectType {
@@ -110,18 +110,18 @@ enum FlowPointType {
 }
 
 interface DiagPointTree {
-  node: DiagPoint[];
-  splitTree?: DiagPointTree[];
+  node: DiagPoint[],
+  splitTree?: DiagPointTree[]
 }
 
 interface DiagFlowPath {
-  flowId: number;
-  nodes: DiagPointTree;
+  flowId: number,
+  nodes: DiagPointTree
 }
 
 interface DiagFlowDirectPath {
-  flowId: number;
-  nodes: DiagPoint[];
+  flowId: number,
+  nodes: DiagPoint[]
 }
 
 interface DiagLine {
@@ -136,18 +136,18 @@ interface DiagLine {
   name: "OntDiag",
 })
 export default class OntDiag extends Vue {
-  private ontPortDef = { wid: 30, hei: 40 };
-  private ontDef = { wid: 200, hei: 300 };
-  private ponPortDef = { wid: 100, hei: 300 };
-  private oltDef = { wid: 200, hei: 350 };
-  private oltEtherPortDef = { wid: 20, hei: 20 };
-  private oltBpVlanRecDef = { wid: 40, hei: 20 };
-  private ontOltDist = 200;
-  private svgWid = 1200;
-  private svgHei = 1000;
-  private rightMarigin = 100;
-  private oltDistY = 100;
-  private oltDistX = 150;
+  private ontPortDef = { wid: 30, hei: 40 }
+  private ontDef = { wid: 200, hei: 300 }
+  private ponPortDef = { wid: 100, hei: 300 }
+  private oltDef = { wid: 200, hei: 350 }
+  private oltEtherPortDef = { wid: 20, hei: 20 }
+  private oltBpVlanRecDef = { wid: 40, hei: 20 }
+  private ontOltDist = 200
+  private svgWid = 1200
+  private svgHei = 1000
+  private rightMarigin = 100
+  private oltDistY = 100
+  private oltDistX = 150
   private portColorDef = {
     green: "#92D050",
     grey: "#AFABAB",
@@ -155,13 +155,13 @@ export default class OntDiag extends Vue {
     blue: "#8FAADC",
     yellow: "#FCE170",
   };
-  private ipStr: string = "10.245.34.156";
-  private ontlist: string[] = [];
-  private checkOnt: string = "";
-  private wsSocket: WebSocket | undefined = undefined;
+  private ipStr: string = "10.245.34.156"
+  private ontlist: string[] = []
+  private checkOnt: string = ""
+  private wsSocket: WebSocket | undefined = undefined
   private webSocketIp = '10.245.251.172' //"127.0.0.1";
-  private resultInfo: string = "";
-  private execType: "Onts" | "OntPortrait" | "none" = "none";
+  private resultInfo: string = ""
+  private execType: "Onts" | "OntPortrait" | "none" = "none"
 
   async getOnts() {
     this.execType = 'Onts'
