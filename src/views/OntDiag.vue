@@ -18,7 +18,7 @@
               :value="item.ontId"
             >
             <span style="float: left">{{ item.ontId }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.linkPon }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.state === 'present'? '*' + item.linkPon: item.linkPon}}</span>
             </el-option> </el-select
         ></el-col>
         <el-col :span="2"
@@ -179,6 +179,7 @@ export default class OntDiag extends Vue {
   private ipStr: string = "10.245.34.156"
   private ontlist: DiagOntLink[] = []
   private checkOnt: string = ""
+  private execOnt:string = ""
   private wsSocket: WebSocket | undefined = undefined
   private wsConnected:boolean = false
   private webSocketIp = "127.0.0.1"; // '10.245.251.172' 
@@ -199,6 +200,7 @@ export default class OntDiag extends Vue {
 
   async ontPortrait() {
     this.execType = 'OntPortrait'
+    this.execOnt = this.checkOnt
     if (!this.wsSocket) {
       await this.webSocketConnect() 
     }else {
@@ -210,6 +212,7 @@ export default class OntDiag extends Vue {
   }
 
   async OntFlowStat() {
+    this.execType = 'OntFlowStats'
      if (!this.wsSocket) {
        console.log('WSocket not connected')
        if (this.statInterHandler) {
@@ -246,23 +249,23 @@ export default class OntDiag extends Vue {
           ipAddr: this.ipStr,
         } as DiagWSMsgAllOntReq;
       } else if (execType === "OntPortrait") {
-        if (this.checkOnt === "") {
+        if (this.execOnt === "") {
           this.setResultInfo("no select Ont");
           break;
         }
         wsRequest = {
           header: { cmdId: DiagWSMsgType.DiagWSMsgTypeOntDiagREQ, resCode: 0 },
           ipAddr: this.ipStr,
-          ontId: this.checkOnt,
+          ontId: this.execOnt,
         } as DiagWSMsgOntDiagReq;
       } else if (execType === 'OntFlowStats') {
-         if (this.checkOnt === "") {
+         if (this.execOnt === "") {
           this.setResultInfo("no select Ont");
           break;
         }
         wsRequest = {
           header: { cmdId: DiagWSMsgType.DiagWSMsgTypeOntFlowStatREQ, resCode: 0 },
-          ontId: this.checkOnt,
+          ontId: this.execOnt,
         } as DiagWSMsgOntFlowStatsReq;       
       }else {
         
@@ -325,7 +328,7 @@ export default class OntDiag extends Vue {
         this.ontlist.push(...ontsRes.ontList)
         break
       case DiagWSMsgType.DiagWSMsgTypeOntDiagRES:
-        this.setResultInfo(`${this.execType} response`)
+        this.setResultInfo(`OntPortrait response`)
         let diagRes = res as unknown as DiagWSMsgOntDiagRes
         if (diagRes.OntCompose) {
           this.testDrawWithQos(diagRes.OntCompose, true)
@@ -334,6 +337,7 @@ export default class OntDiag extends Vue {
         }
         break
       case DiagWSMsgType.DiagWSMsgTypeOntFlowStatRES:
+        this.setResultInfo(`OntFlowStats response`)
          let diagStatRes = res as unknown as DiagWSMsgOntFlowStatsRes
         if (diagStatRes.flowStats) {
           this.updateOntFlowSpeed(diagStatRes.flowStats)
@@ -385,11 +389,27 @@ export default class OntDiag extends Vue {
       },
     ];
 
+
+    let veipIf: DiagOntIfPortrait[] = [
+      {
+        ifname: "F1",
+        veipIf: "",
+        adminState: "enable",
+        operState: "up",
+      },
+      {
+        ifname: "G1",
+        veipIf: "",
+        adminState: "enable",
+        operState: "up",
+      },
+    ];
     let ont: DiagOntPortrait = {
       ontId: "onttest",
       state:"present",
       ontOutInterface: ontOutIf,
       ontInInterface: ontInIf,
+      ontVeipInterface:veipIf,
       connPon: "1/1/gp1",
     };
 
@@ -694,6 +714,7 @@ export default class OntDiag extends Vue {
           },
         ],
         ontInInterface: [],
+        
       },
       flows: [
         {
@@ -843,6 +864,16 @@ export default class OntDiag extends Vue {
         veip.add(diagCom.ont.ontOutInterface[ii].veipIf);
       }
     }
+
+    // Add to veip ports if the veip interface has service provision
+    for (let oo of diagCom.ont.ontVeipInterface) {
+      for (let flow of diagCom.flows) {
+        if (flow.ontPort === oo.ifname) {
+          veip.add(oo.ifname)
+        }
+      }
+    }
+
 
     if (veip.size > 0) {
       posX = ontRect.x + ontRect.width / 2 - this.ontPortDef.wid / 2;
@@ -1557,6 +1588,9 @@ export default class OntDiag extends Vue {
       // .attr('stroke-width', 1.5)
       // .attr('d', line)
       let d3path = d3.path();
+      if (!path.nodes[0]) {
+        continue
+      }
       d3path.moveTo(path.nodes[0].x, path.nodes[0].y);
       for (let ii = 1; ii < path.nodes.length; ii++) {
         d3path.lineTo(path.nodes[ii].x, path.nodes[ii].y);
@@ -1622,7 +1656,10 @@ export default class OntDiag extends Vue {
 
     if (withFlowStat) {
       let that = this
-      setInterval(async ()=>{
+      if (that.statInterHandler) {
+        clearInterval(that.statInterHandler)
+      }
+      that.statInterHandler = setInterval(async ()=>{
         await that.OntFlowStat()
       }, 10000)
     }

@@ -74,7 +74,8 @@ export interface DiagOntPortrait {
     state:"missing" | "present"
     connPon: string,
     ontOutInterface:DiagOntIfPortrait[],
-    ontInInterface:DiagOntIfPortrait[]
+    ontInInterface:DiagOntIfPortrait[],
+    ontVeipInterface:DiagOntIfPortrait[],
 }
 
 export interface DiagOltPortPortrait {
@@ -128,7 +129,8 @@ export interface DiagWSMsgAllOntReq {
 
 export interface DiagOntLink {
     ontId:string,
-    linkPon:string
+    linkPon:string,
+    state:"missing" | "present"
 }
 
 export interface DiagWSMsgAllOntRes {
