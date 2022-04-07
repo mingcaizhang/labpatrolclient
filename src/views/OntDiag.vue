@@ -185,7 +185,7 @@ export default class OntDiag extends Vue {
   private execOnt:string = ""
   private wsSocket: WebSocket | undefined = undefined
   private wsConnected:boolean = false
-  private webSocketIp = '127.0.0.1' // '10.245.251.172' 
+  private webSocketIp =  '10.245.251.172' 
   private resultInfo: string = ""
   private execType: "Onts" | "OntPortrait" |"OntFlowStats" | "none" = "none"
   private statInterHandler:NodeJS.Timer|undefined
