@@ -1,7 +1,7 @@
 <template>
   <div class="ontdiag">
     <div>
-      <el-row>
+      <el-row :align="bottom">
         <el-col :span="4"
           ><div>
             <el-input placeholder="" v-model="ipStr">
@@ -26,6 +26,9 @@
         </el-col>
         <el-col :span="3"
           ><el-button @click="ontPortrait">OntPortrait</el-button>
+        </el-col>
+        <el-col :span="2">
+          <el-checkbox v-model="forceRebuild">forcerebuild</el-checkbox>
         </el-col>
           <el-col :span="10"> <p>{{ resultInfo }}</p>
         </el-col>
@@ -182,10 +185,11 @@ export default class OntDiag extends Vue {
   private execOnt:string = ""
   private wsSocket: WebSocket | undefined = undefined
   private wsConnected:boolean = false
-  private webSocketIp = '10.245.251.172' 
+  private webSocketIp = '127.0.0.1' // '10.245.251.172' 
   private resultInfo: string = ""
   private execType: "Onts" | "OntPortrait" |"OntFlowStats" | "none" = "none"
   private statInterHandler:NodeJS.Timer|undefined
+  private forceRebuild = false
   async getOnts() {
     this.execType = 'Onts'
     if (!this.wsSocket) {
@@ -257,6 +261,8 @@ export default class OntDiag extends Vue {
           header: { cmdId: DiagWSMsgType.DiagWSMsgTypeOntDiagREQ, resCode: 0 },
           ipAddr: this.ipStr,
           ontId: this.execOnt,
+          forceOlt:this.forceRebuild,
+          forceOnt:this.forceRebuild
         } as DiagWSMsgOntDiagReq;
       } else if (execType === 'OntFlowStats') {
          if (this.execOnt === "") {
@@ -324,6 +330,9 @@ export default class OntDiag extends Vue {
       case (DiagWSMsgType.DiagWSMsgTypeAllOntRES):
         this.setResultInfo(`${this.execType} response`)
         let ontsRes = res as unknown as DiagWSMsgAllOntRes
+        if (ontsRes.header.resCode === -1) {
+          this.setResultInfo(`${this.execType} response error`)
+        }
         this.ontlist = []
         this.ontlist.push(...ontsRes.ontList)
         break
@@ -333,7 +342,11 @@ export default class OntDiag extends Vue {
         if (diagRes.OntCompose) {
           this.testDrawWithQos(diagRes.OntCompose, true)
         }else {
-          this.setResultInfo('Ont portrait none')
+          if (diagRes.header.resCode === -1) {
+            this.setResultInfo('Ont portrait respone error')
+          }else {
+            this.setResultInfo('Ont portrait none')
+          }
         }
         break
       case DiagWSMsgType.DiagWSMsgTypeOntFlowStatRES:

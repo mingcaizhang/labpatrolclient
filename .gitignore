@@ -1,7 +1,18 @@
 .DS_Store
 node_modules
 /dist
-
+src/api/DataFetch.js
+src/api/DataFetch.js.map
+src/main.js
+src/main.js.map
+src/router/index.js
+src/router/index.js.map
+src/store/index.js
+src/store/index.js.map
+src/utils/DiagPub.js
+src/utils/DiagPub.js.map
+src/utils/request.js
+src/utils/request.js.map
 # local env files
 .env.local
 .env.*.local
