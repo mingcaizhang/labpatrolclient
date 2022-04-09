@@ -5,8 +5,14 @@
     <div>
     </div>
   <el-container style="border: 1px solid #eee">
-  <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-    <el-menu>
+      <el-header class="el-headerx" style="height:30px">
+    <el-button @click="collapseStatus" size="mini" >
+        <i :class='isCollapse?"el-icon-d-arrow-right":"el-icon-d-arrow-left"'></i>
+     </el-button>
+        </el-header>
+   <el-container>
+  <el-aside width="200px" style="background-color: rgb(238, 241, 246)" :hidden='isCollapse'>
+    <el-menu >
       <el-menu-item index="1" @click="loadAxos">AxosCard</el-menu-item>
       <el-menu-item index="2" @click="loadExa">ExaCard</el-menu-item>
       <el-menu-item index="3" @click="loadAxosOnt">AxosOnt</el-menu-item>
@@ -16,15 +22,13 @@
        <el-menu-item index="7" @click="loadXCommand">XCommand</el-menu-item>
        <el-menu-item index="8" @click="loadOntDiag">OntDiag</el-menu-item>
       <el-menu-item index="8" @click="loadTopo">Topo</el-menu-item>
-
     </el-menu>
   </el-aside>
-
-  <el-container>
     <el-main>
+
       <router-view/>
     </el-main>
-  </el-container>
+    </el-container>
 </el-container>
 
   </div>
@@ -32,12 +36,12 @@
 </template>
 
 <style>
-  .el-header {
+  .el-headerx {
     background-color: #B3C0D1;
     color: #333;
-    line-height: 60px;
+    line-height: 20px;
+    height: 30px;
   }
-
   .el-aside {
     color: #333;
   }
@@ -50,6 +54,12 @@ import { Component, Vue } from 'vue-property-decorator'
   name: 'App'
 })
 export default class extends Vue {
+  private isCollapse = false
+  protected collapseStatus() {
+    this.isCollapse = !this.isCollapse
+    console.log(this.isCollapse)
+  }
+
   private loadAxos() {
     this.$router.push({ path: '/axoscard' }).catch(err => {
       console.warn(err)
@@ -85,7 +95,7 @@ export default class extends Vue {
       console.warn(err)
     })
   }
- 
+
   private loadXCommand() {
     this.$router.push({ path: '/xcommand' }).catch(err => {
       console.warn(err)
@@ -95,13 +105,13 @@ export default class extends Vue {
   private loadOntDiag() {
     this.$router.push({ path: '/ontdiag' }).catch(err => {
       console.warn(err)
-    })    
+    })
   }
 
   private loadTopo() {
     this.$router.push({ path: '/topo' }).catch(err => {
       console.warn(err)
-    })    
-  }  
+    })
+  }
 }
 </script>
