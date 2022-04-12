@@ -1695,7 +1695,7 @@ export default class OntDiag extends Vue {
       for (let flow of flowStats.flows) {
         if (flow.key === key) {
           found = true
-          return (d as DiagLine).label + `  us:${(Math.floor(flow.usRate/1000)/1000).toFixed(1)}kbs  ds:${(Math.floor(flow.dsRate)/1000).toFixed(1)}kbs`
+          return (d as DiagLine).label + `  us:${(Math.floor(flow.usRate/1000)).toFixed(1)}kbs  ds:${(Math.floor(flow.dsRate)/1000).toFixed(1)}kbs`
         }
       }
       return (d as DiagLine).label
