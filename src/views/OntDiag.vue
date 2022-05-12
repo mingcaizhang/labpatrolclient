@@ -1,7 +1,7 @@
 <template>
   <div class="ontdiag">
     <div>
-      <el-row :align="bottom">
+      <el-row>
         <el-col :span="4"
           ><div>
             <el-input placeholder="" v-model="ipStr">
@@ -765,6 +765,7 @@ export default class OntDiag extends Vue {
       height: this.ontDef.hei,
       name: diagCom.ont.ontId,
     };
+    let oltAggCardNum = 0
     let ontOutIntfRect: DiagRectRec[] = [];
     let ontInIntfRect: DiagRectRec[] = [];
     let ontVeipRect: DiagRectRec[] = [];
@@ -1047,23 +1048,41 @@ export default class OntDiag extends Vue {
     // =============== draw OLT card ==============
     // temporarily max two cards
     if (diagCom.olts.length > 2) {
-      console.log("max support two olt cards in temp");
-      return;
+      
+      // return;
     }
+
+    // olt only draw the agg or E7 all
+    for (let olt of diagCom.olts) {
+      if (olt.shelf === 1) {
+        oltAggCardNum ++
+      }
+    }
+
+    if (oltAggCardNum > 2) {
+      console.error("max support two olt aggcard in temp");
+    }
+
+    if (oltAggCardNum == 0) {
+      console.error("no olt aggcard found");
+      oltAggCardNum =  diagCom.olts.length >2? 2: diagCom.olts.length
+    }
+
     let oltStartY = 0;
     let oltStartX = oltPonBackend.x - this.oltDistX - this.oltDef.wid;
-    if (diagCom.olts.length % 2 === 1) {
+    if (oltAggCardNum % 2 === 1) {
       oltStartY = heiMid - this.oltDef.hei / 2;
       oltStartY -=
-        (diagCom.olts.length / 2) * (this.oltDef.hei + this.oltDistY);
+        (oltAggCardNum / 2) * (this.oltDef.hei + this.oltDistY);
     } else {
       oltStartY =
         heiMid -
-        (diagCom.olts.length / 2) * (this.oltDef.hei + this.oltDistY) +
+        (oltAggCardNum / 2) * (this.oltDef.hei + this.oltDistY) +
         this.oltDistY / 2;
     }
 
-    for (let ii = 0; ii < diagCom.olts.length; ii++) {
+    // only draw the first two cards
+    for (let ii = 0; ii < oltAggCardNum; ii++) {
       let cardRef: DiagCardPos = {
         shelf: diagCom.olts[ii].shelf,
         slot: diagCom.olts[ii].slot,
@@ -1198,7 +1217,7 @@ export default class OntDiag extends Vue {
       .attr("fill", "white");
 
     // ======================== olt etherPort==========
-    for (let ii = 0; ii < diagCom.olts.length; ii++) {
+    for (let ii = 0; ii < oltAggCardNum; ii++) {
       let oltEthPorts: DiagOltPortRectRec[] = [];
       let posX = oltRects[ii].x - this.oltEtherPortDef.wid / 2;
       let startY = oltRects[ii].y;
