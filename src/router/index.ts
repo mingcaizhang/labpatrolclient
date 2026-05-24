@@ -7,8 +7,8 @@ import E7Ont from '../views/E7Ont.vue'
 import AxosModule from '../views/AxosModule.vue'
 import ExaModule from '../views/ExaModule.vue'
 import XCommand from '../views/XCommand.vue'
-import OntDiag from "../views/OntDiag.vue"
-import Topo from "../views/Topo.vue"
+import OntDiag from '../views/OntDiag.vue'
+import Topo from '../views/Topo.vue'
 
 import { component } from 'vue/types/umd'
 
@@ -62,16 +62,16 @@ const routes: Array<RouteConfig> = [
   },
 
   {
-    path:'/ontdiag',
-    name:'OntDiag',
+    path: '/ontdiag',
+    name: 'OntDiag',
     component: OntDiag
   },
 
   {
-    path:'/topo',
-    name:'topo',
+    path: '/topo',
+    name: 'topo',
     component: Topo
-  },  
+  },
   {
     path: '/about',
     name: 'About',
@@ -79,6 +79,11 @@ const routes: Array<RouteConfig> = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
+  },
+  {
+    path: '/equip-history',
+    name: 'EquipHistory',
+    component: () => import('../views/EquipHistory.vue')
   }
 ]
 

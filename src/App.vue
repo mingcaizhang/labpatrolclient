@@ -21,7 +21,8 @@
       <el-menu-item index="6" @click="loadExaModule">ExaModule</el-menu-item>
        <el-menu-item index="7" @click="loadXCommand">XCommand</el-menu-item>
        <el-menu-item index="8" @click="loadOntDiag">OntDiag</el-menu-item>
-      <el-menu-item index="8" @click="loadTopo">Topo</el-menu-item>
+      <el-menu-item index="9" @click="loadTopo">Topo</el-menu-item>
+      <el-menu-item index="10" @click="loadEquipHistory">EquipHistory</el-menu-item>
     </el-menu>
   </el-aside>
     <el-main>
@@ -110,6 +111,12 @@ export default class extends Vue {
 
   private loadTopo() {
     this.$router.push({ path: '/topo' }).catch(err => {
+      console.warn(err)
+    })
+  }
+
+  private loadEquipHistory() {
+    this.$router.push({ path: '/equip-history' }).catch(err => {
       console.warn(err)
     })
   }

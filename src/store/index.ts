@@ -6,17 +6,31 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    xCommandIpList:[],
-    that:this,
-    xCardType:'axos'
+    xCommandIpList: [],
+    that: this,
+    xCardType: 'axos',
+    equipHistorySn: '',
+    equipHistoryType: 'card',
+    equipHistoryList: [],
+    equipHistoryHeaders: []
     // xCommandIpStr:'192.168.3.3'
   },
   mutations: {
-    setXCmdIpList:(state, ipList)=>{
+    setXCmdIpList: (state, ipList) => {
       state.xCommandIpList = ipList
     },
-    setXCardType:(state, caTdType)=>{
+    setXCardType: (state, caTdType) => {
       state.xCardType = caTdType
+    },
+    setEquipHistorySn: (state, sn) => {
+      state.equipHistorySn = sn
+    },
+    setEquipHistoryType: (state, type) => {
+      state.equipHistoryType = type
+    },
+    setEquipHistoryData: (state, payload) => {
+      state.equipHistoryList = payload.list
+      state.equipHistoryHeaders = payload.headers
     }
   },
   actions: {
