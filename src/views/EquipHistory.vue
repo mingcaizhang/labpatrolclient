@@ -18,7 +18,17 @@
       </el-col>
     </el-row>
 
-    <el-table v-if="list.length > 0" :data="list" :border="true" style="width: 100%" :fit="true">
+    <div v-if="loading" class="loading-container">
+      <div class="spinner"></div>
+      <span>Loading data...</span>
+    </div>
+    <el-table
+      v-show="!loading && list.length > 0"
+      :data="list"
+      :border="true"
+      style="width: 100%"
+      :fit="true"
+    >
       <el-table-column
         v-for="item of headers"
         :key="item"
@@ -46,6 +56,7 @@ export default class EquipHistory extends Vue {
   private type = 'card'
   private headers: string[] = []
   private list: HistoryItem[] = []
+  private loading = false
 
   created(): void {
     this.sn = this.$store.state.equipHistorySn || ''
@@ -64,40 +75,45 @@ export default class EquipHistory extends Vue {
       return
     }
 
-    let res
-    if (this.type === 'ont') {
-      res = await getOntLocation({ sn: this.sn.trim() })
-    } else if (this.type === 'module') {
-      res = await getModuleLocation({ sn: this.sn.trim() })
-    } else {
-      res = await getCardLocation({ sn: this.sn.trim() })
-    }
-
-    const data = res.data
-
-    if (data && data.code === 200 && data.message && data.message.res) {
-      this.list = data.message.res as HistoryItem[]
-      if (this.list.length > 0) {
-        this.headers = Object.keys(this.list[0])
+    this.loading = true
+    try {
+      let res
+      if (this.type === 'ont') {
+        res = await getOntLocation({ sn: this.sn.trim() })
+      } else if (this.type === 'module') {
+        res = await getModuleLocation({ sn: this.sn.trim() })
       } else {
+        res = await getCardLocation({ sn: this.sn.trim() })
+      }
+
+      const data = res.data
+
+      if (data && data.code === 200 && data.message && data.message.res) {
+        this.list = data.message.res as HistoryItem[]
+        if (this.list.length > 0) {
+          this.headers = Object.keys(this.list[0])
+        } else {
+          this.headers = []
+          this.$message({
+            showClose: true,
+            message: 'No data found',
+            type: 'info'
+          })
+        }
+        this.$store.commit('setEquipHistorySn', this.sn.trim())
+        this.$store.commit('setEquipHistoryType', this.type)
+        this.$store.commit('setEquipHistoryData', { list: this.list, headers: this.headers })
+      } else {
+        this.list = []
         this.headers = []
         this.$message({
           showClose: true,
-          message: 'No data found',
-          type: 'info'
+          message: 'Failed to fetch data',
+          type: 'error'
         })
       }
-      this.$store.commit('setEquipHistorySn', this.sn.trim())
-      this.$store.commit('setEquipHistoryType', this.type)
-      this.$store.commit('setEquipHistoryData', { list: this.list, headers: this.headers })
-    } else {
-      this.list = []
-      this.headers = []
-      this.$message({
-        showClose: true,
-        message: 'Failed to fetch data',
-        type: 'error'
-      })
+    } finally {
+      this.loading = false
     }
   }
 }
@@ -119,5 +135,27 @@ export default class EquipHistory extends Vue {
 .label-text {
   margin-right: 8px;
   font-weight: bold;
+}
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+  color: #409eff;
+  font-size: 14px;
+}
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #409eff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin-bottom: 12px;
+}
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
